@@ -1,11 +1,12 @@
 "use strict";
 
 import userService from "../Services/UserService.js";
+import bcryptjs from "bcryptjs";
 
 const getUserByEmail = async (req, res) => {
   try {
     const email = req.params.email;
-    const user = await userService.findOne({ email: email });
+    const user = await userService.findOne({ email: email,  });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -18,6 +19,8 @@ const getUserByEmail = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const userData = req.body;
+    userData.password = await bcryptjs.hash(userData.password, 10);
+    console.log(userData.password);
     const newUser = await userService.create(userData);
     res.status(201).json(newUser);
   } catch (error) {
@@ -51,15 +54,10 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-let returnName = (req, res) => {
-  res.json({
-    name: "Gautam Kr. Pandey",
-  });
-};
+
 export default {
   getUserByEmail,
   createUser,
   updateUser,
   deleteUser,
-  returnName,
 };
