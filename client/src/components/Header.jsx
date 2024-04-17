@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="bg-slate-200 h-12 shadow-md flex justify-between items-center p-2">
       {" "}
-      <Link to="/home">
+      <Link to="/">
         <div className="name flex flex-wrap p-1">
           <div className="firstname text-slate-400 font-bold text-sm sm:text-lg">
             Gautam
@@ -14,7 +14,7 @@ export default function Header() {
           </div>
         </div>
       </Link>
-      <div className="search bg-slate-100 rounded-md w- sm:w-64">
+      <div className="search bg-slate-100 rounded-md w-48 sm:w-64">
         <form className="flex p-1 justify-between  items-center">
           <input
             type="text"
