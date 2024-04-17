@@ -2,21 +2,22 @@
 
 import userService from "../Services/UserService.js";
 import bcryptjs from "bcryptjs";
+import { CustomError } from "../utils/CustomError.js";
 
-const getUserByEmail = async (req, res) => {
+const getUserByEmail = async (req, res, next) => {
   try {
     const email = req.params.email;
-    const user = await userService.findOne({ email: email,  });
+    const user = await userService.findOne({ email: email });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const userData = req.body;
     userData.password = await bcryptjs.hash(userData.password, 10);
@@ -24,7 +25,8 @@ const createUser = async (req, res) => {
     const newUser = await userService.create(userData);
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.log("This is error code: " + error.statusCode);
+    next(error);
   }
 };
 

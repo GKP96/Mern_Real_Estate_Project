@@ -7,6 +7,13 @@ import UserRouter from "./routes/UserRouter.js";
 const app = express();
 app.use(bodyParser.json());
 app.use("/users", UserRouter);
+app.use((err, req, res,next)=>{
+  res.status(500).json({
+    message: err.message,
+    status: err.statusCode|| 500,
+    success: false,
+  })
+})
 const url = "mongodb://localhost:27017/realestate";
 mongoose.connect(url);
 const db = mongoose.connection;
