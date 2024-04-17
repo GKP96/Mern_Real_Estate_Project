@@ -1,2 +1,0 @@
-mv .git ../ => To move your git repository to root folder
-
