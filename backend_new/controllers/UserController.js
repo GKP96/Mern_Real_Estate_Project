@@ -2,7 +2,7 @@
 
 import userService from "../Services/UserService.js";
 import bcryptjs from "bcryptjs";
-import { CustomError } from "../utils/CustomError.js";
+
 
 const getUserByEmail = async (req, res, next) => {
   try {
@@ -20,12 +20,12 @@ const getUserByEmail = async (req, res, next) => {
 const createUser = async (req, res, next) => {
   try {
     const userData = req.body;
+    console.log(userData);
     userData.password = await bcryptjs.hash(userData.password, 10);
     console.log(userData.password);
     const newUser = await userService.create(userData);
     res.status(201).json(newUser);
   } catch (error) {
-    console.log("This is error code: " + error.statusCode);
     next(error);
   }
 };

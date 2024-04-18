@@ -1,11 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-
+import cors from 'cors';
 import UserRouter from "./routes/UserRouter.js";
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 app.use("/users", UserRouter);
 app.use((err, req, res,next)=>{
   res.status(500).json({
