@@ -16,7 +16,10 @@ export default function SignIn() {
     setIsLoading(true);
     console.log(formData);
     try {
-      const res = await axios.post("/api/auth/signin", formData);
+      const res = await axios.post(
+        "http://localhost:5050/users/signin",
+        formData
+      );
       localStorage.setItem("token", res.data.token);
       window.location.href = "/";
     } catch (err) {

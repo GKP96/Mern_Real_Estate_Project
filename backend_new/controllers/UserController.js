@@ -2,7 +2,7 @@
 
 import userService from "../Services/UserService.js";
 import bcryptjs from "bcryptjs";
-
+import { CustomError } from "../utils/CustomError.js";
 
 const getUserByEmail = async (req, res, next) => {
   try {
@@ -56,10 +56,31 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const signIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    console.log(email, password);
+    const user = await userService.findOne({ email: email });
+    console.log(user);
+    if (!user) {
+      console.log("User not found", user);
+      return next(CustomError("User not found", 404));
+    }
+    if (!bcryptjs.compareSync(password, user.password)) {
+      return next(CustomError("Invalid password", 400));
+    }
+    const token = await userService.generateToken(user);
+    console.log(token)
+    res.json({ token: token });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export default {
   getUserByEmail,
   createUser,
   updateUser,
   deleteUser,
+  signIn,
 };

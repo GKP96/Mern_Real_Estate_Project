@@ -1,5 +1,7 @@
 "use strict";
 
+import jwt from "jsonwebtoken";
+
 import User from "../models/User.js";
 
 const findOne = async (query) => {
@@ -29,6 +31,14 @@ const update = async (query, values) => {
 const count = async (query) => {
   return await User.countDocuments(query);
 };
+const generateToken = async (query) => {
+  const token = await jwt.sign(
+    { id: query._Id, role: query.role, email: query.email },
+    "SecretKey",
+    { expiresIn: "1h" }
+  );
+  return token;
+};
 
 export default {
   findOne,
@@ -38,4 +48,5 @@ export default {
   remove,
   update,
   count,
+  generateToken,
 };
