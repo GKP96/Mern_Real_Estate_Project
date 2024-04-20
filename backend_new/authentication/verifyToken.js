@@ -20,20 +20,18 @@ let verifyToken = (token) => {
   try {
     const decoded = jwt.verify(tokenParts[1], secretKey);
     req.user = decoded;
-    return{
-      message:"authenticated !",
+    return {
+      message: "authenticated !",
       success: true,
-    }
+    };
   } catch (e) {
     return {
       message: "authentication failed !",
       success: false,
-    }
+    };
   }
 };
 
-
 module.exports = {
-    verifyToken,
-    
-}
+  verifyToken,
+};

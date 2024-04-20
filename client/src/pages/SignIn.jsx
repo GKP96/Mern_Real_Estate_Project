@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../redux/user/UserSlice";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 export default function SignIn() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const formChangeHandler = (e) => {
     setFormData({
       ...formData,
@@ -13,19 +21,21 @@ export default function SignIn() {
   };
   const submitHandler = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    console.log(formData);
+    dispatch(signInStart());
     try {
       const res = await axios.post(
         "http://localhost:5050/users/signin",
         formData
       );
-      localStorage.setItem("token", res.data.token);
-      window.location.href = "/";
+      if (res.data.success === true) {
+        dispatch(signInSuccess(res.data));
+        localStorage.setItem("token", res.data.token);
+        navigate("/");
+      } else {
+        dispatch(signInFailure(res.messsage));
+      }
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
+      dispatch(signInFailure(err.messsage));
     }
   };
   return (
@@ -53,12 +63,12 @@ export default function SignIn() {
         />
         <button className=" bg-slate-700 w-[50vw] sm:w-[26vw] h-[6vh] rounded-md">
           <p className="text-white mr-5">
-            {isLoading ? "Loading ..." : "Sign In"}
+            {loading ? "Loading ..." : "Sign In"}
           </p>
         </button>
         <button className=" bg-red-600 w-[50vw] sm:w-[26vw] h-[6vh] rounded-md">
           <p className="text-white mr-5">
-            {isLoading ? "Loading ..." : "CONTINUE WITH GOOGLE"}
+            {loading ? "Loading ..." : "CONTINUE WITH GOOGLE"}
           </p>
         </button>
       </form>

@@ -70,8 +70,8 @@ const signIn = async (req, res, next) => {
       return next(CustomError("Invalid password", 400));
     }
     const token = await userService.generateToken(user);
-    console.log(token)
-    res.json({ token: token });
+    console.log(token);
+    res.json({ success: true, user, token: token });
   } catch (error) {
     next(error);
   }
