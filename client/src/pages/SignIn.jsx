@@ -8,6 +8,7 @@ import {
 } from "../redux/user/UserSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import OAuth from "../components/OAuth";
 export default function SignIn() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
@@ -66,11 +67,7 @@ export default function SignIn() {
             {loading ? "Loading ..." : "Sign In"}
           </p>
         </button>
-        <button className=" bg-red-600 w-[50vw] sm:w-[26vw] h-[6vh] rounded-md">
-          <p className="text-white mr-5">
-            {loading ? "Loading ..." : "CONTINUE WITH GOOGLE"}
-          </p>
-        </button>
+        <OAuth />
       </form>
       <div
         className="text text-center flex justify-center gap-2
