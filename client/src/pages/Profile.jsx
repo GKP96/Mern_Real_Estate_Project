@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-
+import  { useState, useRef } from "react";
+import { useSelector } from "react-redux";
 const Profile = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const fileRef = useRef(null);
+  const {currentUser} = useSelector((state) => state.user);
   const handleUpdate = () => {
     // Logic to handle update button click
   };
@@ -20,19 +21,18 @@ const Profile = () => {
   const handleSignOut = () => {
     // Logic to handle sign out button click
   };
-  useEffect(() => {
-    
-  }, []);
 
   return (
     <div className="flex flex-col items-center">
       <div className="mb-4">
         <p className="text-center  text-3xl my-4">Profile</p>
         <div className="flex justify-center rounded-full my-4">
+          <input  ref={fileRef} type="file" accept="image/*" hidden/>
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkWe6ek60yg3BK9mvflvCNQgsQx_EKObtVq5E3e-noMdXJzASok20-1ma8nf0KGGdK85g&usqp=CAU"
-            alt="Avatar"
-            className="w-20 h-20 "
+          onClick={()=> fileRef.current.click()}
+          src={currentUser.avatar}
+            alt="profile"
+            className="w-20 h-20 rounded-full"
           />
         </div>
 
