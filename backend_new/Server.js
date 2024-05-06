@@ -1,20 +1,22 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-import cors from 'cors';
+import cors from "cors";
 import UserRouter from "./routes/UserRouter.js";
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(cors());
 app.use("/users", UserRouter);
-app.use((err, req, res,next)=>{
+app.use((err, req, res, next) => {
   res.status(500).json({
     message: err.message,
-    status: err.statusCode|| 500,
+    status: err.statusCode || 500,
     success: false,
-  })
-})
+  });
+});
 const url = "mongodb://localhost:27017/realestate";
 mongoose.connect(url);
 const db = mongoose.connection;

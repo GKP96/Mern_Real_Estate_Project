@@ -30,20 +30,25 @@ const createUser = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(CustomError(401, "You can only update your own account!"));
   try {
-    const email = req.params.email;
-    const updatedData = req.body;
-    const updatedUser = await userService.findOneAndUpdate(
-      { email: email },
-      updatedData
-    );
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
-    res.json(updatedUser);
+
+    const updatedUser = await userService.findOneAndUpdate(
+      {_id: req.params.id},
+      req.body
+    );
+    // remove password from response
+    console.log(updatedUser._doc);
+    const { password, ...rest } = updatedUser._doc;
+
+    res.status(200).json(rest);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    next(error);
   }
 };
 
