@@ -3,15 +3,16 @@
 import userService from "../Services/UserService.js";
 import bcryptjs from "bcryptjs";
 import { CustomError } from "../utils/CustomError.js";
+import { CustomResponse } from "../utils/CusomResponse.js";
 
 const getUserByEmail = async (req, res, next) => {
   try {
-    const email = req.params.email;
-    const user = await userService.findOne({ email: email });
+    const id = req.params.id;
+    const user = await userService.findOne({ _id: id });
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.json(CustomResponse(404, "User not found"));
     }
-    res.json(user);
+    res.json(CustomResponse(200, "User found ", user));
   } catch (error) {
     next(error);
   }
@@ -20,11 +21,10 @@ const getUserByEmail = async (req, res, next) => {
 const createUser = async (req, res, next) => {
   try {
     const userData = req.body;
-    console.log(userData);
     userData.password = await bcryptjs.hash(userData.password, 10);
     console.log(userData.password);
     const newUser = await userService.create(userData);
-    res.status(201).json(newUser);
+    res.json(CustomResponse(201, "User created successfully", newUser));
   } catch (error) {
     next(error);
   }
@@ -37,46 +37,22 @@ const updateUser = async (req, res, next) => {
     if (req.body.password) {
       req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
-
     const updatedUser = await userService.findOneAndUpdate(
-      {_id: req.params.id},
+      { _id: req.params.id },
       req.body
     );
-    // remove password from response
-    console.log(updatedUser._doc);
     const { password, ...rest } = updatedUser._doc;
-
-    res.status(200).json(rest);
+    res.json(CustomResponse(200, "User updated successfully", rest));
   } catch (error) {
     next(error);
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const email = req.params.email;
     await userService.remove({ email: email });
-    res.json({ message: "User deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-const signIn = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    console.log(email, password);
-    const user = await userService.findOne({ email: email });
-    console.log(user);
-    if (!user) {
-      console.log("User not found", user);
-      return next(CustomError("User not found", 404));
-    }
-    if (!bcryptjs.compareSync(password, user.password)) {
-      return next(CustomError("Invalid password", 400));
-    }
-    const token = await userService.generateToken(user);
-    console.log(token);
-    res.json({ success: true, user, token: token });
+    res.json(CustomResponse(200, "User deleted successfully"));
   } catch (error) {
     next(error);
   }
@@ -87,5 +63,4 @@ export default {
   createUser,
   updateUser,
   deleteUser,
-  signIn,
 };

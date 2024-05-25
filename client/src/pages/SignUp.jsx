@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import OAuth from "../components/OAuth";
-
+// import OAuth from "../components/OAuth";
+import { url } from "../utils/common";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -19,8 +19,9 @@ export default function SignUp() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      await axios.post(`http://localhost:5050/users`, {
-        name: formData.name,
+      await axios.post(`${url}/users`, {
+        firstname: formData.firstname,
+        lastname: formData.lastname,
         email: formData.email,
         password: formData.password,
         role: formData.role,
@@ -44,29 +45,36 @@ export default function SignUp() {
       >
         <input
           type="text"
-          placeholder="name"
-          className="w-[50vw] sm:w-[26vw] h-[6vh] rounded-md p-4  bg-white"
+          placeholder="firstname"
+          className="w-[70vw] sm:w-[50vw] h-[6vh] rounded-md p-4  bg-white"
           onChange={formChangeHandler}
-          id="name"
+          id="firstname"
+        />
+        <input
+          type="text"
+          placeholder="lastname"
+          className="w-[70vw] sm:w-[50vw] h-[6vh] rounded-md p-4  bg-white"
+          onChange={formChangeHandler}
+          id="lastname"
         />
         <input
           type="text"
           placeholder="email"
-          className="w-[50vw] sm:w-[26vw] h-[6vh] rounded-md p-4 bg-white"
+          className="w-[70vw] sm:w-[50vw] h-[6vh] rounded-md p-4 bg-white"
           id="email"
           onChange={formChangeHandler}
         />
         <input
           type="password"
           placeholder="password"
-          className="w-[50vw] sm:w-[26vw] h-[6vh] rounded-md p-4 bg-white"
+          className="w-[70vw] sm:w-[50vw] h-[6vh] rounded-md p-4 bg-white"
           id="password"
           onChange={formChangeHandler}
         />
         <input
           type="text"
-          placeholder="role"
-          className="w-[50vw] sm:w-[26vw] h-[6vh] rounded-md p-4 bg-white"
+          placeholder="role : buyer or seller"
+          className="w-[70vw] sm:w-[50vw] h-[6vh] rounded-md p-4 bg-white"
           id="role"
           onChange={formChangeHandler}
         />
@@ -75,7 +83,7 @@ export default function SignUp() {
             {isLoading ? "Loading .." : "Sign up"}
           </p>
         </button>
-        <OAuth/>
+        {/* <OAuth /> */}
       </form>
       <div
         className="text text-center flex justify-center gap-2

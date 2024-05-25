@@ -3,6 +3,7 @@ import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/user/UserSlice";
 import { useNavigate } from "react-router-dom";
+import { url } from "../utils/common";
 
 export default function OAuth() {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function OAuth() {
 
       const result = await signInWithPopup(auth, provider);
 
-      const res = await fetch("http://localhost:5050/users/google", {
+      const res = await fetch(`${url}/users/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,6 +27,7 @@ export default function OAuth() {
         }),
       });
       const data = await res.json();
+      console.log(data);
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {

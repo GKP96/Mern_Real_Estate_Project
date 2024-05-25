@@ -1,7 +1,6 @@
-
-export  const CustomError = (msg,statusCode )=>{
-    let err = new Error();
-    err.message = msg;
-    err.statusCode = statusCode;
-    return err;
-}
+export const CustomError = (statusCode, msg) => {
+  let err = new Error();
+  err.message = msg;
+  err.statusCode = statusCode;
+  return err;
+};

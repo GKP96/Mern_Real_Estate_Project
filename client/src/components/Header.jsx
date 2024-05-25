@@ -1,6 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   return (
@@ -27,17 +28,31 @@ export default function Header() {
         </form>
       </div>
       <div className="  menu p-2">
-        <ul className="gap-4  w-[30vw] flex justify-center">
-          <Link to="/">
-            <li className="hidden sm:inline hover:underline">Home </li>
-          </Link>
-          <Link to="/about">
-            <li className="hidden sm:inline hover:underline">About</li>
+        <ul className=" gap-2 sm:gap-5  w-[30vw] flex justify-center items-center">
+          {currentUser?.role === "seller" && (
+            <Link to="/">
+              <li className="hidden  sm:inline hover:underline">
+                Your Property List{" "}
+              </li>
+            </Link>
+          )}
+          {currentUser?.role === "seller" && (
+            <Link to="/">
+              <Link to="/about">
+                <li className="hidden sm:inline hover:underline">
+                  Add Property
+                </li>
+              </Link>
+            </Link>
+          )}
+
+          <Link to="/buyerhome">
+            <li className="hidden sm:inline hover:underline">All PropertyList</li>
           </Link>
           <Link to="/profile">
             {currentUser ? (
               <img
-                className="h-[5vh] rounded-full"
+                className="h-[45px] w-[45px] rounded-full border-2 border-white hover:scale-105"
                 src={currentUser.avatar}
                 alt="Profile "
               />

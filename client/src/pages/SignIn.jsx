@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import OAuth from "../components/OAuth";
+import { url } from "../utils/common";
 export default function SignIn() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
@@ -25,12 +26,12 @@ export default function SignIn() {
     dispatch(signInStart());
     try {
       const res = await axios.post(
-        "http://localhost:5050/users/signin",
+        `${url}/users/signin`,
         formData
       );
+      console.log("this is res.data " , res.data.success);
       if (res.data.success === true) {
         dispatch(signInSuccess(res.data));
-        localStorage.setItem("token", res.data.token);
         navigate("/");
       } else {
         dispatch(signInFailure(res.messsage));
